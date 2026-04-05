@@ -103,4 +103,125 @@ interface Calculator {
   multiply(a: number, b: number): number;
 }
 // 定義したら以下を実装してください
-const calculator: Calculator = {};
+const calculator: Calculator = {
+  add: (a, b) => a + b,
+  subtract: (a, b) => a - b,
+  multiply: (a, b) => a * b,
+};
+
+//問題7
+// 要件：
+// - SearchParams interface を定義する
+// - keyword: string（必須）
+// - page: number（省略可、デフォルトは1）
+// - limit: number（省略可、デフォルトは10）
+// - category: string（省略可）
+interface SearchParams {
+  keyword: string;
+  page?: number;
+  limit?: number;
+  category?: string;
+}
+
+function search(params: SearchParams): string {
+  const page = params.page ?? 1;
+  const limit = params.limit ?? 10;
+  return `${params.keyword}を検索（${page}ページ目、${limit}件）`;
+}
+
+console.log(search({ keyword: "TypeScript" }));
+// → "TypeScriptを検索（1ページ目、10件）"
+
+//問題8
+interface Config {
+  readonly apiUrl: string;
+  readonly apiKey: string;
+  timeout: number;
+}
+
+const config: Config = {
+  apiUrl: "https://api.example.com",
+  apiKey: "secret-key-123",
+  timeout: 3000,
+};
+
+// 以下のうち、エラーになる行はどれか答えてから実際に確認してください
+config.apiUrl = "https://other.com"; // A
+config.timeout = 5000; // B
+config.apiKey = "new-key"; // C
+
+//問題9
+// 以下をinterfaceとtypeのどちらで定義するか判断して実装してください
+
+// 1. ユーザーのプロフィール情報（name, bio, avatarUrl?）
+// 2. APIレスポンスの結果（"success" | "error" | "loading"）
+// 3. 座標（x: number, y: number）
+// 4. ユーザーIDの型（stringまたはnumber）
+interface UserProfile {
+  name: string;
+  bio: string;
+  avatarUrl?: string;
+}
+
+type Result = "success" | "error" | "loading";
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+type UserId = string | number;
+
+//問題10
+// ECサイトの型設計
+// 要件：
+// - BaseEntity: id(readonly), createdAt(string), updatedAt(string)
+// - Product: BaseEntityを継承、name・price・stock(在庫数)
+// - CartItem: product(Product)・quantity
+// - Cart: items(CartItem[])・totalPrice()メソッド（返り値number）
+interface BaseEntity {
+  readonly id: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Product extends BaseEntity {
+  name: string;
+  price: number;
+  stock: number;
+}
+
+interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+interface Cart {
+  items: CartItem[];
+  totalPrice(): number;
+}
+
+// 全て定義したら以下を実装してください
+const cart: Cart = {
+  items: [
+    {
+      product: {
+        id: 1,
+        createdAt: "2024-01-01",
+        updatedAt: "2024-01-01",
+        name: "TS本",
+        price: 2800,
+        stock: 10,
+      },
+      quantity: 2,
+    },
+  ],
+  totalPrice(): number {
+    return this.items.reduce(
+      (sum, item) => sum + item.product.price * item.quantity,
+      0,
+    );
+  },
+};
+
+console.log(cart.totalPrice()); // → 5600
